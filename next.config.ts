@@ -1,11 +1,8 @@
 import type { NextConfig } from "next";
 
 /**
- * BUILD_TARGET=mobile  → статичний експорт (`out/`) для Capacitor (iOS / Android WebView).
- * (за замовчуванням)   → стандартна збірка для Web/PWA (Vercel, Node, Docker).
+ * Статичний експорт (`out/`) для Cloudflare Pages/Workers Static Assets та Capacitor (iOS / Android).
  */
-const isMobileBuild = process.env.BUILD_TARGET === "mobile";
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   trailingSlash: true,

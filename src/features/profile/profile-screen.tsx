@@ -934,7 +934,7 @@ function ProfileForm({ initial }: { initial: UserProfile }) {
                   className="w-full justify-center"
                 >
                   <Sparkles className="size-4 text-brand-strong" aria-hidden="true" />
-                  <span>✨ Прев&apos;ю можливостей Vitalio</span>
+                  <span>🎯 Пройти опитування цілей заново</span>
                 </Button>
 
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

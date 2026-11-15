@@ -47,10 +47,11 @@ export function DashboardHeader({ name, date }: DashboardHeaderProps) {
           type="button"
           onClick={openWelcomeModal}
           className="inline-flex h-10 items-center gap-1.5 rounded-full bg-surface px-3 text-xs font-bold text-ink shadow-card ring-1 ring-line transition-colors hover:bg-raised"
-          title="Огляд можливостей Vitalio"
+          title="Опитування цілей та персональний розрахунок норми КБЖУ"
         >
           <Sparkles className="size-4 text-brand-strong" aria-hidden="true" />
-          <span className="hidden sm:inline">Прев&apos;ю</span>
+          <span className="hidden sm:inline">Опитування цілей</span>
+          <span className="sm:hidden">Ціль</span>
         </button>
 
         {!authEmail ? (

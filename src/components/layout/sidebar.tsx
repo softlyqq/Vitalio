@@ -63,7 +63,7 @@ export function Sidebar() {
           className="flex h-9 w-full items-center gap-2 rounded-xl px-3 text-left text-xs font-semibold text-muted transition-colors hover:bg-surface/80 hover:text-ink"
         >
           <Sparkles className="size-3.5 text-brand-strong" aria-hidden="true" />
-          <span>Прев&apos;ю додатку</span>
+          <span>Розрахувати ціль & норму</span>
         </button>
       </div>
 

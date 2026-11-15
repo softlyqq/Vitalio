@@ -82,7 +82,6 @@ function Dashboard({ today, date }: { today: ISODate; date: ISODate }) {
   const openAddFood = useUiStore((state) => state.openAddFood);
   const openDiaryTab = useUiStore((state) => state.openDiaryTab);
   const openWelcomeModal = useUiStore((state) => state.openWelcomeModal);
-  const openAuthModal = useUiStore((state) => state.openAuthModal);
   const dayCycleMode = useUiStore((state) => state.dayCycleMode);
   const setDayCycleMode = useUiStore((state) => state.setDayCycleMode);
   const pushToast = useUiStore((state) => state.pushToast);
@@ -195,10 +194,7 @@ function Dashboard({ today, date }: { today: ISODate; date: ISODate }) {
             <div className="flex flex-wrap items-center gap-2">
               <Button variant="secondary" size="sm" onClick={openWelcomeModal}>
                 <Sparkles className="size-3.5 text-brand-strong" aria-hidden="true" />
-                <span>Прев&apos;ю додатку</span>
-              </Button>
-              <Button variant="soft" size="sm" onClick={() => openAuthModal("register")}>
-                <span>🎯 Розрахувати норму</span>
+                <span>🎯 Опитування цілей</span>
               </Button>
               <Button variant="primary" size="sm" onClick={() => openAddFood("breakfast")}>
                 <span>+ Додати прийом</span>
