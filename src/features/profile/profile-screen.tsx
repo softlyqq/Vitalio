@@ -14,6 +14,7 @@ import {
   Settings,
   ShieldCheck,
   Sparkles,
+  Trash2,
   UserPlus,
   UserRound,
 } from "lucide-react";
@@ -25,7 +26,7 @@ import { SegmentedControl, type SegmentOption } from "@/components/ui/segmented-
 import { readStoredAccounts } from "@/features/auth/auth-sheet";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { usePlanTier, useProfile, useUpdateProfile } from "@/hooks/use-app-data";
-import { useResetDemo } from "@/hooks/use-diary";
+import { useClearAllDiary, useResetDemo } from "@/hooks/use-diary";
 import { useT } from "@/i18n";
 import { cn } from "@/lib/cn";
 import { ACTIVITY_FACTOR, calculateTargets } from "@/lib/nutrition";
@@ -216,9 +217,11 @@ function ProfileForm({ initial }: { initial: UserProfile }) {
   const t = useT();
   const updateProfile = useUpdateProfile();
   const resetDemo = useResetDemo();
+  const clearAll = useClearAllDiary();
   const { data: planTier = "free" } = usePlanTier();
   const openPaywall = useUiStore((state) => state.openPaywall);
   const openAuthModal = useUiStore((state) => state.openAuthModal);
+  const openWelcomeModal = useUiStore((state) => state.openWelcomeModal);
   const authEmail = useUiStore((state) => state.authEmail);
   const setAuthEmail = useUiStore((state) => state.setAuthEmail);
   const pushToast = useUiStore((state) => state.pushToast);
@@ -346,7 +349,7 @@ function ProfileForm({ initial }: { initial: UserProfile }) {
       dietaryPreferences: dietPrefs,
       diary:
         typeof window !== "undefined"
-          ? JSON.parse(window.localStorage.getItem("vitalio:diary:v1") ?? "{}")
+          ? JSON.parse(window.localStorage.getItem("vitalio:diary:v2") ?? "{}")
           : {},
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
@@ -923,23 +926,50 @@ function ProfileForm({ initial }: { initial: UserProfile }) {
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <Button variant="secondary" size="sm" onClick={handleExport} className="flex-1">
-                  <Download className="size-4" aria-hidden="true" />
-                  Експорт JSON
-                </Button>
+              <div className="flex flex-col gap-2 pt-2">
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    resetDemo.mutate(undefined, {
-                      onSuccess: () => pushToast("Демо-дані щоденника відновлено"),
-                    })
-                  }
-                  className="flex-1"
+                  variant="secondary"
+                  size="md"
+                  onClick={openWelcomeModal}
+                  className="w-full justify-center"
                 >
-                  <RotateCcw className="size-4" aria-hidden="true" />
-                  Скинути демо-дані
+                  <Sparkles className="size-4 text-brand-strong" aria-hidden="true" />
+                  <span>✨ Прев&apos;ю можливостей Vitalio</span>
+                </Button>
+
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      clearAll.mutate(undefined, {
+                        onSuccess: () => pushToast("Всі дані очищено до 0 (чистий старт)"),
+                      })
+                    }
+                    className="justify-center text-danger hover:bg-danger/10"
+                  >
+                    <Trash2 className="size-4" aria-hidden="true" />
+                    <span>Скинути все до 0</span>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      resetDemo.mutate(undefined, {
+                        onSuccess: () => pushToast("Тестові демо-дані успішно завантажено"),
+                      })
+                    }
+                    className="justify-center"
+                  >
+                    <RotateCcw className="size-4" aria-hidden="true" />
+                    <span>Завантажити демо-дані</span>
+                  </Button>
+                </div>
+
+                <Button variant="secondary" size="sm" onClick={handleExport} className="w-full justify-center">
+                  <Download className="size-4" aria-hidden="true" />
+                  <span>Експорт щоденника (JSON)</span>
                 </Button>
               </div>
             </div>

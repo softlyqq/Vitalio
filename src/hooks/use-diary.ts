@@ -236,13 +236,35 @@ export function useCopyMeal() {
   });
 }
 
-export function useResetDemo() {
+export function useClearAllDiary() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => services.diary.resetDemo(),
+    mutationFn: async () => {
+      await services.diary.clearAll();
+      await services.profile.clearWeights();
+    },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.allDays() });
       void queryClient.invalidateQueries({ queryKey: queryKeys.allSummaries() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.allWeights() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.fasting() });
+    },
+  });
+}
+
+export function useResetDemo() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      await services.diary.resetDemo();
+      const profile = services.profile.getProfileSync();
+      await services.profile.resetDemoWeights(profile.weightKg);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.allDays() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.allSummaries() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.allWeights() });
+      void queryClient.invalidateQueries({ queryKey: queryKeys.fasting() });
     },
   });
 }

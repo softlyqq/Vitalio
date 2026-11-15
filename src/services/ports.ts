@@ -44,6 +44,7 @@ export interface DiaryRepository {
   copyMeal(fromDate: ISODate, toDate: ISODate, meal: MealType): Promise<FoodEntry[]>;
   getSummariesSync(from: ISODate, to: ISODate): DaySummary[];
   getSummaries(from: ISODate, to: ISODate): Promise<DaySummary[]>;
+  clearAll(): Promise<void>;
   resetDemo(): Promise<void>;
 }
 
@@ -76,6 +77,8 @@ export interface ProfileRepository {
   getWeightsSync(from: ISODate, to: ISODate): WeightEntry[];
   getWeights(from: ISODate, to: ISODate): Promise<WeightEntry[]>;
   logWeight(date: ISODate, weightKg: number, note?: string): Promise<WeightEntry>;
+  clearWeights(): Promise<void>;
+  resetDemoWeights(currentWeight: number): Promise<void>;
   getFastingSync(): FastingState;
   getFasting(): Promise<FastingState>;
   updateFasting(state: FastingState): Promise<FastingState>;

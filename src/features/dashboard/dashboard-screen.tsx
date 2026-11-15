@@ -81,6 +81,8 @@ function Dashboard({ today, date }: { today: ISODate; date: ISODate }) {
   const selectDate = useUiStore((state) => state.selectDate);
   const openAddFood = useUiStore((state) => state.openAddFood);
   const openDiaryTab = useUiStore((state) => state.openDiaryTab);
+  const openWelcomeModal = useUiStore((state) => state.openWelcomeModal);
+  const openAuthModal = useUiStore((state) => state.openAuthModal);
   const dayCycleMode = useUiStore((state) => state.dayCycleMode);
   const setDayCycleMode = useUiStore((state) => state.setDayCycleMode);
   const pushToast = useUiStore((state) => state.pushToast);
@@ -173,6 +175,38 @@ function Dashboard({ today, date }: { today: ISODate; date: ISODate }) {
           </span>
         </div>
       </div>
+
+      {/* Підказка-вітання для нового користувача / дня з 0 ккал */}
+      {!entries || entries.length === 0 ? (
+        <div className="relative overflow-hidden rounded-3xl bg-surface p-4 ring-1 ring-line shadow-card sm:p-5">
+          <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3.5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand-strong ring-1 ring-brand-strong/20">
+                <Sparkles className="size-5" aria-hidden="true" />
+              </span>
+              <div>
+                <h2 className="text-base font-bold text-ink">Чистий аркуш на сьогодні 🌿</h2>
+                <p className="mt-0.5 text-xs text-muted sm:text-sm">
+                  Спожито <strong className="text-ink">0 ккал</strong>. Додайте перший сніданок (+), випийте
+                  склянку води або перегляньте огляд можливостей Vitalio.
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={openWelcomeModal}>
+                <Sparkles className="size-3.5 text-brand-strong" aria-hidden="true" />
+                <span>Прев&apos;ю додатку</span>
+              </Button>
+              <Button variant="soft" size="sm" onClick={() => openAuthModal("register")}>
+                <span>🎯 Розрахувати норму</span>
+              </Button>
+              <Button variant="primary" size="sm" onClick={() => openAddFood("breakfast")}>
+                <span>+ Додати прийом</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-12 lg:gap-5">
         <CaloriesCard

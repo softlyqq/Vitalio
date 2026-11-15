@@ -16,6 +16,7 @@ export function Sidebar() {
   const setActiveTab = useUiStore((state) => state.setActiveTab);
   const openAddFood = useUiStore((state) => state.openAddFood);
   const openPaywall = useUiStore((state) => state.openPaywall);
+  const openWelcomeModal = useUiStore((state) => state.openWelcomeModal);
   const openAuthModal = useUiStore((state) => state.openAuthModal);
   const authEmail = useUiStore((state) => state.authEmail);
   const { data: planTier = "free" } = usePlanTier();
@@ -55,6 +56,15 @@ export function Sidebar() {
             </span>
           </button>
         ) : null}
+
+        <button
+          type="button"
+          onClick={openWelcomeModal}
+          className="flex h-9 w-full items-center gap-2 rounded-xl px-3 text-left text-xs font-semibold text-muted transition-colors hover:bg-surface/80 hover:text-ink"
+        >
+          <Sparkles className="size-3.5 text-brand-strong" aria-hidden="true" />
+          <span>Прев&apos;ю додатку</span>
+        </button>
       </div>
 
       <nav aria-label={t.nav.label}>

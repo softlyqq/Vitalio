@@ -10,28 +10,27 @@ import {
 import { readStorage, writeStorage } from "@/services/storage";
 import type { FastingState, ISODate, PlanTier, UserProfile, WeightEntry } from "@/types/domain";
 
-const PROFILE_KEY = "vitalio:profile:v1";
+const PROFILE_KEY = "vitalio:profile:v2";
 const PLAN_KEY = "vitalio:plan:v1";
-const WEIGHTS_KEY = "vitalio:weights:v1";
-const FASTING_KEY = "vitalio:fasting:v1";
+const WEIGHTS_KEY = "vitalio:weights:v2";
+const FASTING_KEY = "vitalio:fasting:v2";
 
 export const DEFAULT_FASTING: FastingState = {
-  active: true,
+  active: false,
   protocol: "16:8",
-  // Демо: таймер запущено ~11.5 годин тому, щоб одразу показати живий прогрес фази кетозу/ліполізу
-  startedAt: new Date(Date.now() - 11.5 * 3600 * 1000).toISOString(),
-  completedSessions: 12,
+  startedAt: null,
+  completedSessions: 0,
 };
 
-/** Профіль за замовчуванням для демо-режиму. */
+/** Профіль за замовчуванням для нового користувача (чистий старт). */
 export const DEFAULT_PROFILE: UserProfile = {
-  name: "Дмитро",
-  sex: "male",
-  age: 29,
-  heightCm: 182,
-  weightKg: 78,
-  targetWeightKg: 75,
-  activity: "moderate",
+  name: "Користувач",
+  sex: "female",
+  age: 26,
+  heightCm: 168,
+  weightKg: 62,
+  targetWeightKg: 60,
+  activity: "light",
   goal: "maintain",
 };
 
@@ -65,7 +64,7 @@ export class LocalProfileRepository implements ProfileRepository {
   private weightsCache: WeightStoreData | null = null;
   private fastingCache: FastingState | null = null;
 
-  private loadWeights(currentWeight: number): WeightStoreData {
+  private loadWeights(): WeightStoreData {
     if (this.weightsCache) return this.weightsCache;
     if (typeof window === "undefined") return { version: 1, entries: {} };
     const stored = readStorage(WEIGHTS_KEY, weightStoreSchema);
@@ -73,10 +72,10 @@ export class LocalProfileRepository implements ProfileRepository {
       this.weightsCache = stored;
       return stored;
     }
-    const seeded = createDemoWeights(todayISO(), currentWeight);
-    this.weightsCache = seeded;
-    writeStorage(WEIGHTS_KEY, seeded);
-    return seeded;
+    const clean: WeightStoreData = { version: 1, entries: {} };
+    this.weightsCache = clean;
+    writeStorage(WEIGHTS_KEY, clean);
+    return clean;
   }
 
   getProfileSync(): UserProfile {
@@ -95,7 +94,7 @@ export class LocalProfileRepository implements ProfileRepository {
     this.profileCache = profile;
     writeStorage(PROFILE_KEY, profile);
     const today = todayISO();
-    const weights = this.loadWeights(profile.weightKg);
+    const weights = this.loadWeights();
     weights.entries[today] = { date: today, weightKg: profile.weightKg };
     this.weightsCache = weights;
     writeStorage(WEIGHTS_KEY, weights);
@@ -121,8 +120,7 @@ export class LocalProfileRepository implements ProfileRepository {
   }
 
   getWeightsSync(from: ISODate, to: ISODate): WeightEntry[] {
-    const profile = this.getProfileSync();
-    const { entries } = this.loadWeights(profile.weightKg);
+    const { entries } = this.loadWeights();
     return dateRange(from, to).flatMap((date) => {
       const entry = entries[date];
       return entry ? [entry] : [];
@@ -136,7 +134,7 @@ export class LocalProfileRepository implements ProfileRepository {
   async logWeight(date: ISODate, weightKg: number, note?: string): Promise<WeightEntry> {
     const profile = this.getProfileSync();
     const rounded = Math.round(weightKg * 10) / 10;
-    const store = this.loadWeights(rounded);
+    const store = this.loadWeights();
     const entry: WeightEntry = { date, weightKg: rounded, ...(note ? { note } : {}) };
     store.entries[date] = entry;
     this.weightsCache = store;
@@ -148,6 +146,20 @@ export class LocalProfileRepository implements ProfileRepository {
       writeStorage(PROFILE_KEY, nextProfile);
     }
     return entry;
+  }
+
+  async clearWeights(): Promise<void> {
+    const clean: WeightStoreData = { version: 1, entries: {} };
+    this.weightsCache = clean;
+    writeStorage(WEIGHTS_KEY, clean);
+    this.fastingCache = DEFAULT_FASTING;
+    writeStorage(FASTING_KEY, DEFAULT_FASTING);
+  }
+
+  async resetDemoWeights(currentWeight: number): Promise<void> {
+    const seeded = createDemoWeights(todayISO(), currentWeight);
+    this.weightsCache = seeded;
+    writeStorage(WEIGHTS_KEY, seeded);
   }
 
   getFastingSync(): FastingState {

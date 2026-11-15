@@ -16,7 +16,7 @@ import type {
   NewFoodEntry,
 } from "@/types/domain";
 
-const STORAGE_KEY = "vitalio:diary:v1";
+const STORAGE_KEY = "vitalio:diary:v2";
 const MAX_WATER_ML = 10_000;
 const MAX_BURNED_KCAL = 10_000;
 const MAX_CAFFEINE_MG = 1_500;
@@ -33,6 +33,9 @@ const emptyDay = (date: ISODate): DayLog => ({
  * Реалізація `DiaryRepository` поверх localStorage з миттєвим in-memory кешем:
  * парсинг і Zod-валідація виконуються лише один раз за сесію, тому кожен клік
  * відпрацьовує за < 0.1 мс без блокування головного потоку.
+ *
+ * Для нових користувачів щоденник за замовчуванням порожній (0 ккал, 0 води, 0 спалено).
+ * Демо-дані можна завантажити опціонально через `resetDemo()`.
  */
 export class LocalDiaryRepository implements DiaryRepository {
   private cache: DiaryStoreData | null = null;
@@ -47,10 +50,10 @@ export class LocalDiaryRepository implements DiaryRepository {
       this.cache = stored;
       return stored;
     }
-    const seeded = createDemoDiary(todayISO());
-    this.cache = seeded;
-    writeStorage(STORAGE_KEY, seeded);
-    return seeded;
+    const clean: DiaryStoreData = { version: 1, days: {} };
+    this.cache = clean;
+    writeStorage(STORAGE_KEY, clean);
+    return clean;
   }
 
   private save(data: DiaryStoreData): void {
@@ -244,6 +247,11 @@ export class LocalDiaryRepository implements DiaryRepository {
 
   async getSummaries(from: ISODate, to: ISODate): Promise<DaySummary[]> {
     return this.getSummariesSync(from, to);
+  }
+
+  async clearAll(): Promise<void> {
+    const clean: DiaryStoreData = { version: 1, days: {} };
+    this.save(clean);
   }
 
   async resetDemo(): Promise<void> {

@@ -12,6 +12,7 @@ import { AuthSheet, readActiveEmail } from "@/features/auth/auth-sheet";
 import { PaywallSheet } from "@/features/paywall/paywall-sheet";
 import { ProfileScreen } from "@/features/profile/profile-screen";
 import { ProgressScreen } from "@/features/progress/progress-screen";
+import { WelcomeModal } from "@/features/onboarding/welcome-modal";
 import { pathToTab, useUiStore } from "@/stores/ui-store";
 
 /**
@@ -57,6 +58,7 @@ export function AppShell({ children }: { children?: ReactNode }) {
       <AddFoodSheet />
       <AuthSheet />
       <PaywallSheet />
+      <WelcomeModal />
       <Toaster />
     </div>
   );

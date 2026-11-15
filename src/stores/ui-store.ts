@@ -59,6 +59,7 @@ interface UiState {
   selectedDate: ISODate | null;
   addFoodSheet: AddFoodSheetState;
   paywallOpen: boolean;
+  welcomeModalOpen: boolean;
   authModalOpen: boolean;
   authModalMode: AuthModalMode;
   authEmail: string | null;
@@ -72,6 +73,8 @@ interface UiState {
   closeAddFood: () => void;
   openPaywall: () => void;
   closePaywall: () => void;
+  openWelcomeModal: () => void;
+  closeWelcomeModal: () => void;
   openAuthModal: (mode?: AuthModalMode) => void;
   closeAuthModal: () => void;
   setAuthEmail: (email: string | null) => void;
@@ -103,6 +106,7 @@ export const useUiStore = create<UiState>((set) => ({
   selectedDate: null,
   addFoodSheet: { open: false, meal: null },
   paywallOpen: false,
+  welcomeModalOpen: false,
   authModalOpen: false,
   authModalMode: "register",
   authEmail: null,
@@ -130,6 +134,8 @@ export const useUiStore = create<UiState>((set) => ({
   closeAddFood: () => set((state) => ({ addFoodSheet: { ...state.addFoodSheet, open: false } })),
   openPaywall: () => set({ paywallOpen: true }),
   closePaywall: () => set({ paywallOpen: false }),
+  openWelcomeModal: () => set({ welcomeModalOpen: true }),
+  closeWelcomeModal: () => set({ welcomeModalOpen: false }),
   openAuthModal: (mode = "register") => set({ authModalOpen: true, authModalMode: mode }),
   closeAuthModal: () => set({ authModalOpen: false }),
   setAuthEmail: (authEmail) => {
