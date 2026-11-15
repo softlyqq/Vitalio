@@ -8,12 +8,12 @@ const isMobileBuild = process.env.BUILD_TARGET === "mobile";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  trailingSlash: isMobileBuild,
+  trailingSlash: true,
   images: { unoptimized: true },
   turbopack: {
     root: process.cwd(),
   },
-  ...(isMobileBuild ? { output: "export" as const } : {}),
+  output: "export",
 };
 
 export default nextConfig;
