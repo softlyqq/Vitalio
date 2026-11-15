@@ -1,0 +1,225 @@
+﻿@import "tailwindcss";
+
+/* Тема перемикається класом `.dark` на <html> (next-themes). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────── Дизайн-токени ─────────────────────────────
+   Семантичні змінні. Компоненти використовують лише ці імена (bg-surface, text-ink…),
+   а не «сирі» кольори — тому тема та бренд змінюються в одному місці. */
+:root {
+  --bg: #f1f3ef;
+  --surface: #ffffff;
+  --surface-sunken: #f5f7f3;
+  --surface-raised: #ffffff;
+  --ink: #101413;
+  --ink-muted: #56605c;
+  --ink-subtle: #6b7571;
+  --line: rgb(16 20 19 / 0.08);
+  --line-strong: rgb(16 20 19 / 0.16);
+
+  /* Бренд: смарагдовий баланс. `brand` — графіка, `brand-strong` — фон кнопок/акцентний текст. */
+  --brand: #10b981;
+  --brand-strong: #047857;
+  --brand-soft: #dcf5ea;
+  --on-brand: #ffffff;
+
+  /* Макронутрієнти */
+  --protein: #5a7bf5;
+  --protein-soft: #e4eafe;
+  --fat: #f2a20c;
+  --fat-soft: #fdf0d3;
+  --carbs: #f2604c;
+  --carbs-soft: #fde4df;
+  --water: #3aa6e8;
+  --water-soft: #dff1fc;
+
+  --danger: #d6402d;
+  --warning: #b86e00;
+
+  --glass: rgb(255 255 255 / 0.72);
+  --scrim: rgb(10 14 13 / 0.45);
+
+  --elev-card: 0 1px 2px rgb(16 20 19 / 0.04), 0 12px 32px -16px rgb(16 20 19 / 0.16);
+  --elev-float: 0 24px 64px -16px rgb(16 20 19 / 0.32);
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.dark {
+  --bg: #121416;
+  --surface: #1b1e21;
+  --surface-sunken: #15181a;
+  --surface-raised: #24282c;
+  --ink: #f1f4f3;
+  --ink-muted: #a2aca8;
+  --ink-subtle: #87918d;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.18);
+
+  --brand: #34d399;
+  --brand-strong: #34d399;
+  --brand-soft: #123327;
+  --on-brand: #04261b;
+
+  --protein: #8ba4ff;
+  --protein-soft: #222a4d;
+  --fat: #fbbf24;
+  --fat-soft: #3a2f12;
+  --carbs: #ff8a78;
+  --carbs-soft: #422420;
+  --water: #5cc0f5;
+  --water-soft: #14303f;
+
+  --danger: #ff7a68;
+  --warning: #f5b24a;
+
+  --glass: rgb(27 30 33 / 0.72);
+  --scrim: rgb(0 0 0 / 0.6);
+
+  --elev-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 32px -16px rgb(0 0 0 / 0.6);
+  --elev-float: 0 24px 64px -16px rgb(0 0 0 / 0.8);
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--surface-sunken);
+  --color-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-subtle: var(--ink-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-protein: var(--protein);
+  --color-protein-soft: var(--protein-soft);
+  --color-fat: var(--fat);
+  --color-fat-soft: var(--fat-soft);
+  --color-carbs: var(--carbs);
+  --color-carbs-soft: var(--carbs-soft);
+  --color-water: var(--water);
+  --color-water-soft: var(--water-soft);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-glass: var(--glass);
+  --color-scrim: var(--scrim);
+
+  --radius-card: 1.75rem;
+  --radius-control: 1rem;
+
+  --shadow-card: var(--elev-card);
+  --shadow-float: var(--elev-float);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────────────────────────── База ───────────────────────────── */
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* «Нативне» відчуття у WebView: без гумового скролу всієї сторінки. */
+    overscroll-behavior-y: none;
+  }
+  button,
+  a,
+  input,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+  button {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand-strong);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--on-brand);
+  }
+}
+
+/* ───────────────────────────── Утиліти ───────────────────────────── */
+@utility pt-safe {
+  padding-top: var(--safe-top);
+}
+@utility pb-safe {
+  padding-bottom: var(--safe-bottom);
+}
+
+/* Легкий Glassmorphism — лише для елементів, що «плавають» над контентом. */
+@utility glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Хвиля у склянці води: SVG-шар зсувається на ширину одного періоду. */
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

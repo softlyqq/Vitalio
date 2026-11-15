@@ -1,0 +1,19 @@
+{
+  "name": "Vitalio — калорії без нудьги",
+  "short_name": "Vitalio",
+  "description": "Калорії, БЖВ, вода та прогрес в одному місці.",
+  "lang": "uk",
+  "dir": "ltr",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#121416",
+  "theme_color": "#047857",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
