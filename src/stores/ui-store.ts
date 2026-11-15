@@ -142,8 +142,9 @@ export const useUiStore = create<UiState>((set) => ({
   closeWelcomeModal: () => set({ welcomeModalOpen: false, onboardingGateOpen: false }),
   openOnboardingGate: () => set({ onboardingGateOpen: true }),
   closeOnboardingGate: () => set({ onboardingGateOpen: false }),
-  openAuthModal: (mode = "register") => set({ authModalOpen: true, authModalMode: mode }),
-  closeAuthModal: () => set({ authModalOpen: false }),
+  openAuthModal: (mode = "register") =>
+    set({ onboardingGateOpen: true, authModalOpen: false, authModalMode: mode }),
+  closeAuthModal: () => set({ authModalOpen: false, onboardingGateOpen: false }),
   setAuthEmail: (authEmail) => {
     set({ authEmail });
     if (typeof window !== "undefined") {

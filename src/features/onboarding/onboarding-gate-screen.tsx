@@ -30,7 +30,7 @@ import { calculateTargets } from "@/lib/nutrition";
 import { useUiStore } from "@/stores/ui-store";
 import type { ActivityLevel, GoalType, Sex, UserProfile } from "@/types/domain";
 
-export const WELCOME_STORAGE_KEY = "vitalio:has-seen-preview:v2";
+export const WELCOME_STORAGE_KEY = "vitalio:onboarding-gate:v3";
 const ACCOUNTS_STORAGE_KEY = "vitalio:accounts:v1";
 const ACTIVE_EMAIL_KEY = "vitalio:active-email:v1";
 
@@ -170,7 +170,10 @@ export function OnboardingGateScreen({ onComplete }: { onComplete: () => void })
   const setAuthEmail = useUiStore((state) => state.setAuthEmail);
   const pushToast = useUiStore((state) => state.pushToast);
 
-  const [mode, setMode] = useState<ScreenMode>("quiz");
+  const authModalMode = useUiStore((state) => state.authModalMode);
+  const [internalMode, setInternalMode] = useState<ScreenMode | null>(null);
+  const mode: ScreenMode = internalMode ?? (authModalMode === "login" ? "login" : "quiz");
+  const setMode = (nextMode: ScreenMode) => setInternalMode(nextMode);
   const [step, setStep] = useState<QuizStep>(1);
 
   // Поля анкети
@@ -352,7 +355,7 @@ export function OnboardingGateScreen({ onComplete }: { onComplete: () => void })
       <header className="sticky top-0 z-20 flex h-16 w-full items-center justify-between border-b border-line bg-surface/80 px-4 backdrop-blur-md sm:px-8">
         <Wordmark />
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {mode === "quiz" ? (
             <button
               type="button"
@@ -363,7 +366,7 @@ export function OnboardingGateScreen({ onComplete }: { onComplete: () => void })
               className="inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3 text-xs font-bold text-muted ring-1 ring-line transition-colors hover:bg-raised hover:text-ink"
             >
               <LogIn className="size-3.5 text-brand-strong" aria-hidden="true" />
-              <span>Вже є акаунт? Увійти</span>
+              <span>Увійти</span>
             </button>
           ) : (
             <button
@@ -375,9 +378,19 @@ export function OnboardingGateScreen({ onComplete }: { onComplete: () => void })
               className="inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3 text-xs font-bold text-muted ring-1 ring-line transition-colors hover:bg-raised hover:text-ink"
             >
               <UserPlus className="size-3.5 text-brand-strong" aria-hidden="true" />
-              <span>Почати розрахунок норми</span>
+              <span>Реєстрація / Ціль</span>
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={handleSkipToApp}
+            className="inline-flex h-9 items-center gap-1 rounded-full bg-surface px-3 text-xs font-semibold text-muted ring-1 ring-line transition-colors hover:bg-raised hover:text-ink"
+            title="Перейти до щоденника (Чистий старт з 0)"
+          >
+            <span>До додатку</span>
+            <ArrowRight className="size-3.5" aria-hidden="true" />
+          </button>
 
           <ThemeToggle />
         </div>

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "wrangler deploy --no-bundle",
     "build:mobile": "cross-env BUILD_TARGET=mobile next build",
     "start": "next start",
     "lint": "eslint .",
